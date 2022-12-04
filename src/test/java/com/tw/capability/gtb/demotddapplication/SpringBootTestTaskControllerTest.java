@@ -25,8 +25,6 @@ class SpringBootTestTaskControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-    @Autowired 
-    private TaskController taskController;
     @Autowired
     private TaskRepository taskRepository;
 
