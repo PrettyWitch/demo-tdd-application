@@ -11,8 +11,18 @@ import java.util.List;
 @RequestMapping("/tasks")
 public class TaskController {
 
+    private List<Task> tasks = Collections.emptyList();
+
     @GetMapping
-    public List<Task> fetchTasks(){
-        return Collections.emptyList();
+    public List<Task> fetchTasks() {
+        return tasks;
+    }
+
+    public void save(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public void deleteAll() {
+        this.tasks = Collections.emptyList();
     }
 }
