@@ -27,10 +27,12 @@ class SpringBootTestTaskControllerTest {
     private TestRestTemplate restTemplate;
     @Autowired 
     private TaskController taskController;
+    @Autowired
+    private TaskRepository taskRepository;
 
     @AfterEach
     void tearDown() {
-        taskController.deleteAll();
+        taskRepository.deleteAll();
     }
 
     @Test
@@ -52,7 +54,8 @@ class SpringBootTestTaskControllerTest {
         List<Task> tasks = List.of(
                 new Task("task01", true),
                 new Task("Task02", false));
-        taskController.save(tasks);
+
+        taskRepository.saveAll(tasks);
         // when
         ResponseEntity<String> responseEntity = restTemplate.getForEntity("/tasks", String.class);
 
