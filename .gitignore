@@ -19,6 +19,7 @@ bin/
 
 ### IntelliJ IDEA ###
 .idea
+.gitignore
 *.iws
 *.iml
 *.ipr
@@ -39,3 +40,4 @@ out/
 ### MYSQL ###
 appdata/
 /data/
+
