@@ -104,4 +104,24 @@ class SpringBootTestTaskControllerTest {
         assertThat(fetchedTasks.get(0).getName()).isEqualTo(completed.getName());
         assertThat(fetchedTasks.get(0).getCompleted()).isTrue();
     }
+
+    @Test
+    void should_return_created_task_when_add_task() {
+        // given
+        Task task = new Task("task01", false);
+
+        // when
+        ResponseEntity<Task> responseEntity = restTemplate.postForEntity("/tasks", task, Task.class);
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+        Task createdTask = responseEntity.getBody();
+        assertThat(createdTask).isNotNull();
+        assertThat(createdTask.getId()).isPositive();
+        assertThat(createdTask.getName()).isEqualTo(task.getName());
+        assertThat(createdTask.getCompleted()).isFalse();
+
+
+    }
 }
