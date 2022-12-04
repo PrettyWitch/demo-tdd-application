@@ -44,12 +44,24 @@ class TaskRepositoryTest {
         List<Task> foundTasks = taskRepository.findAll();
 
         // then
-        assertThat(foundTasks)
-                .hasSize(2)
-                .containsOnly(
-                        new Task(1L, "task1", true),
-                        new Task(2L, "task2", false)
-                );
+        assertThat(foundTasks).hasSize(2);
+        assertThat(foundTasks.get(0).getName()).isEqualTo("task1");
+        assertThat(foundTasks.get(0).getCompleted()).isTrue();
+        assertThat(foundTasks.get(1).getName()).isEqualTo("task2");
+        assertThat(foundTasks.get(1).getCompleted()).isFalse();
 
+    }
+
+    @Test
+    void should_return_created_task_when_add_task() {
+        // given
+        Task task = new Task("task01", false);
+        entityManager.persist(task);
+
+        // when
+        Task savedTask = taskRepository.save(task);
+
+        // then
+        assertThat(savedTask).isEqualTo(task);
     }
 }

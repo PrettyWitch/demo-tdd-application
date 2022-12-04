@@ -87,4 +87,18 @@ class TaskServiceTest {
     }
 
 
+    @Test
+    void should_return_created_task_when_add_task() {
+        // given
+        Task task = new Task("task01", false);
+        Task savedTask = new Task(1L,"task01", false);
+        when(taskRepository.save(task)).thenReturn(savedTask);
+         
+        // when
+        Task createdTask = taskService.createTask(task);
+
+        // then
+        assertThat(createdTask).isEqualTo(savedTask);
+        verify(taskRepository).save(task);
+    }
 }
