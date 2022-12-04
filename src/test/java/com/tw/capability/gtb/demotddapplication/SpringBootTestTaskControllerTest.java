@@ -79,10 +79,29 @@ class SpringBootTestTaskControllerTest {
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        List<Task > fetchedTasks = taskJackson.parseObject(responseEntity.getBody());
+        List<Task> fetchedTasks = taskJackson.parseObject(responseEntity.getBody());
         assertThat(fetchedTasks).hasSize(1);
         assertThat(fetchedTasks.get(0).getName()).isEqualTo(toBeDone.getName());
         assertThat(fetchedTasks.get(0).getCompleted()).isFalse();
+    }
 
+    @Test
+    void should_return_completed_tasks_given_completed_is_true() throws IOException {
+        // given
+        Task toBeDone = new Task("task01", false);
+        taskRepository.save(toBeDone);
+        Task completed = new Task("task02", true);
+        taskRepository.save(completed);
+
+        // when
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/tasks?completed=true", String.class);
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+        List<Task> fetchedTasks = taskJackson.parseObject(responseEntity.getBody());
+        assertThat(fetchedTasks).hasSize(1);
+        assertThat(fetchedTasks.get(0).getName()).isEqualTo(completed.getName());
+        assertThat(fetchedTasks.get(0).getCompleted()).isTrue();
     }
 }
