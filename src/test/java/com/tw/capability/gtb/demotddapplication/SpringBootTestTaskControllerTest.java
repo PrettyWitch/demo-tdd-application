@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.atomicMarkableReference;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureJsonTesters
@@ -62,5 +63,26 @@ class SpringBootTestTaskControllerTest {
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         String fetchedTasks = responseEntity.getBody();
         assertThat(taskJackson.parseObject(fetchedTasks)).isEqualTo(tasks);
+    }
+
+    @Test
+    void should_return_to_be_done_tasks_given_completed_is_false() throws IOException {
+        // given
+        Task toBeDone = new Task("task01", false);
+        taskRepository.save(toBeDone);
+        Task completed = new Task("task02", true);
+        taskRepository.save(completed);
+
+        // when
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/tasks?completed=false", String.class);
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+        List<Task > fetchedTasks = taskJackson.parseObject(responseEntity.getBody());
+        assertThat(fetchedTasks).hasSize(1);
+        assertThat(fetchedTasks.get(0).getName()).isEqualTo(toBeDone.getName());
+        assertThat(fetchedTasks.get(0).getCompleted()).isFalse();
+
     }
 }
