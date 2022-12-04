@@ -13,21 +13,21 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SpringBootTestHelloControllerTest {
+class SpringBootTestTaskControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Test
-    void should_return_hello_world() {
+    void should_return_empty_tasks() {
         // given
 
         // when
-        ResponseEntity<String> response = restTemplate.getForEntity("/hello", String.class);
+        ResponseEntity<List> responseEntity = restTemplate.getForEntity("/tasks", List.class);
 
         // then
-        assertThat(response.getBody()).isEqualTo("Hello World!");
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+        assertThat(responseEntity.getBody()).isEmpty();
     }
-
-
 }
