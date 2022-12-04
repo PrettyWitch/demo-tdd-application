@@ -62,6 +62,8 @@ class TaskRepositoryTest {
         Task savedTask = taskRepository.save(task);
 
         // then
-        assertThat(savedTask).isEqualTo(task);
+        assertThat(savedTask.getId()).isNotNull();
+        assertThat(savedTask.getName()).isEqualTo("task01");
+        assertThat(savedTask.getCompleted()).isFalse();
     }
 }

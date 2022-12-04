@@ -121,7 +121,21 @@ class SpringBootTestTaskControllerTest {
         assertThat(createdTask.getId()).isPositive();
         assertThat(createdTask.getName()).isEqualTo(task.getName());
         assertThat(createdTask.getCompleted()).isFalse();
+    }
 
+    @Test
+    void should_return_bad_request_given_completed_is_null_when_add_task() {
+        // given
+        Task task = new Task("task01", null);
+
+        // when
+        ResponseEntity<ErrorResult> responseEntity = restTemplate.postForEntity("/tasks", task, ErrorResult.class);
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+        assertThat(responseEntity.getBody()).isNotNull();
+        assertThat(responseEntity.getBody().getMessage()).containsSequence("completed: must not be null");
 
     }
 }
